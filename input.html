@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gameoff</title>
+	<meta charset="utf-8">
+	<style>
+		#ball {
+			width: 100px; height: 100px; margin-left: -50px;
+			position: absolute; top: 50%; left: 50%;
+			border-radius: 100px;
+			background: red;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="lib/headtrackr.js"></script>
+</head>
+<body>
+	<video id="inputVideo" autoplay loop></video>
+	<div id="ball"></div>
+
+	<script type="text/javascript">
+		var x;
+		var htracker = new headtrackr.Tracker({
+			ui: true,
+			smoothing: true,
+			detectionInterval: 10
+		});
+		htracker.init(document.getElementById('inputVideo'), document.createElement('canvas'));
+		htracker.start();
+
+		document.addEventListener('headtrackrStatus', function (event) {
+			console.log(event.status);
+		});
+
+		var viewportWidth = document.width/2;
+		var pos = viewportWidth - 50;
+		var $ball = $('#ball');
+
+		function move(event) {
+			if((pos < -viewportWidth + 100 - 50 && event.x < 0) || (pos > viewportWidth - 100 - 50 && event.x > 0)) return false;
+			pos += event.x*2;
+			$ball.css('margin-left', pos+'px');
+		}
+		document.addEventListener('headtrackingEvent', move);
+	</script>
+</body>
+</html>
